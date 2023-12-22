@@ -11,6 +11,8 @@ Alternatively, run `./server` in one terminal, and create your requests in anoth
 
 This program was a school project for my Intro to Operating Systems (CSCI 4061) class. We wrote this program to practice using the POSIX library's thread and condition variable functionalities. We also had to practice writing some sort of data structure for this to work (I wrote a queue maintained as a linked list for the processing request queue).
 
+We added to this project for the next assignement in the same class to make it work on a client-server model. The server has a daemon process running that handles new connections, and spawns new threads that handle the actual data processing.
+
 ## Example:
 |img/4/4493.png|output/4/rotated4493.png|
 |--------------|------------------------|
