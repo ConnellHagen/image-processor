@@ -5,22 +5,29 @@ SRCDIR=src
 INCDIR=include
 LIBDIR=lib
 
-all: outdir $(LIBDIR)/utils.o image_rotation
+all: outdir $(LIBDIR)/utils.o server client
 
-image_rotation: $(LIBDIR)/utils.o $(INCDIR)/utils.h $(SRCDIR)/image_rotation.c
-	$(CC) $(CFLAGS) -I$(INCDIR) -o $@ $(LIBDIR)/utils.o $(SRCDIR)/image_rotation.c -lm
+server: $(LIBDIR)/utils.o $(INCDIR)/utils.h $(SRCDIR)/server.c
+	$(CC) $(CFLAGS) -I$(INCDIR) -o $@ $(LIBDIR)/utils.o $(SRCDIR)/server.c -lm
 
-
+client: $(LIBDIR)/utils.o $(INCDIR)/utils.h $(SRCDIR)/client.c
+	$(CC) $(CFLAGS) -I$(INCDIR) -o $@ $(LIBDIR)/utils.o $(SRCDIR)/client.c -lm
+	
 .PHONY: clean outdir
 
-test: clean all
-	@read -p "Please a Dir number: " dir_num; \
-	./image_rotation img/$$dir_num output/$$dir_num 10 180;\
+clean:
+	rm -f server client
+	rm -rf output
 
+test: clean all
+	./server & 
+	for i in `seq 0 10`; do ./client "img/$$i" "output/$$i" 180; done; 
+	pkillall -9 server
+
+test2: clean all
+	for i in `seq 0 10`; do ./client "img/$$i" "output/$$i" 180; done; 
 
 outdir: 
 	for i in `seq 0 10`; do mkdir -p -m 0777 "output/$$i"; done;
 
-clean:
-	rm -f image_rotation
-	rm -rf output
+
